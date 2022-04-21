@@ -95,11 +95,15 @@ const Cards = ({}) => {
                         />
                         <CardContent>
                           <StyledTitle>
-                            <Typography gutterBottom variant="h5" component="div">
-                              {d?.name?.split('#')[0].slice(0, 7)}
+                            <Typography gutterBottom variant="h5" component="div" sx={{ textOverflow: 'ellipsis',
+                              overflow: 'hidden',
+                              width: '120px',
+                              height: '1.2em',
+                              whiteSpace: 'nowrap' }}>
+                              {d?.name}
                             </Typography>
                             <Typography gutterBottom variant="h5" component="div" sx={{color: 'grey !important'}}>
-                              #{d?.name?.split('#')[1]}
+                              #{d?.name?.split('#')[1]?.slice(0,5)}
                             </Typography>
                           </StyledTitle>
 
@@ -111,7 +115,8 @@ const Cards = ({}) => {
                             </Grid>
                             <Grid item xs={6}>
                               <Typography gutterBottom variant="p" component="div" sx={{float: 'right'}}>
-                                {d?.bought} ETH
+                                {/*{d?.bought} ETH*/}
+                                {Math.round(d?.bought * 10000) / 10000} ETH
                               </Typography>
                             </Grid>
                             <Grid item xs={6}>
@@ -121,7 +126,7 @@ const Cards = ({}) => {
                             </Grid>
                             <Grid item xs={6}>
                               <Typography gutterBottom variant="p" component="div" sx={{float: 'right'}}>
-                                {d?.floor} ETH
+                                {Math.round(d?.floor * 10000) / 10000} ETH
                               </Typography>
                             </Grid>
 

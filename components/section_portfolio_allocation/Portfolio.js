@@ -157,7 +157,7 @@ const PortfolioData = (props) => {
                         )
                         : (
                           <Typography variant="h3" component="div" fontWeight={500}>
-                            { portfolio.total_floor_price }
+                            { Math.round(portfolio?.total_floor_price * 10000) / 10000  }
                           </Typography>
                         )
                     }
@@ -182,7 +182,7 @@ const PortfolioData = (props) => {
                         )
                         : (
                           <Typography variant="h3" component="div" fontWeight={500}>
-                            { portfolio.total_floor_price }
+                            { Math.round(portfolio?.total_floor_price * 10000) / 10000  }
                           </Typography>
                         )
                     }
@@ -221,7 +221,7 @@ const PortfolioData = (props) => {
                     )
                     : (
                       <Typography variant="h5" component="div" fontWeight={500}>
-                        {portfolio.portfolio_data.eth_sold_spent !== 'null' ? portfolio.portfolio_data.eth_sold_spent : 0}
+                        {portfolio.portfolio_data.gas_spent !== null ? portfolio.portfolio_data.gas_spent : 0}
                       </Typography>
                     )
                 }
@@ -250,7 +250,8 @@ const PortfolioData = (props) => {
                     )
                     : (
                       <Typography variant="h5" component="div" fontWeight={500}>
-                        {portfolio?.portfolio_data?.eth_sold_spent ? portfolio.portfolio_data.eth_sold_spent.toString().slice(0, 5) : 0}
+                        {/*{portfolio?.portfolio_data?.eth_spent ? portfolio.portfolio_data.eth_spent.toString().slice(0, 5) : 0}*/}
+                        { Math.round(portfolio?.portfolio_data?.eth_spent * 10000) / 10000  }
                       </Typography>
                     )
                 }

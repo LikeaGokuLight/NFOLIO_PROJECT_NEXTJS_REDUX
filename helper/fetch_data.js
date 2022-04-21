@@ -85,7 +85,7 @@ export const fetchFloorPrice = async () => {
     // floor.collection.stats.floor_price
     // floor.collection.stats.num_reports
     // floor.collection.stats.one_day_average_price
-    totalFloorPriceArray.push(Math.ceil(floor.collection.stats.one_day_average_price));
+    totalFloorPriceArray.push(floor.collection.stats.one_day_average_price);
   }))
 
   const allTotalFloorPriceData = totalFloorPriceArray.reduce((pv, cv) => pv + cv, 0);
@@ -163,7 +163,7 @@ export const fetchCardsDataPage = async (page = 1, size = 100) => {
     data.items.map(async (d) => {
       const data = await fetchAdditionalData(d.token_address, d.token_id);
 
-      const floor = data?.collection?.stats?.floor_price;
+      const floor = data?.collection?.stats?.one_day_average_price
 
       console.log(typeof(data.image_url))
 
@@ -171,7 +171,7 @@ export const fetchCardsDataPage = async (page = 1, size = 100) => {
         d.token_address ? d.token_address + d.token_id : 'none',
         data.name ? data.name : 'none',
         data.image_url ? data.image_url : 'none',
-        d.eth_value ? d.eth_value : 'none',
+        d.eth_value ? d.eth_value : 0,
         floor !== null ? floor : 0,
         d.estimated_price ? d.estimated_price : null,
       ))
