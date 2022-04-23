@@ -9,12 +9,14 @@ import { createWrapper } from "next-redux-wrapper";
 import {portfolioReducer} from "../reducers/portfolioReducer";
 import {tableReducer} from "../reducers/tableReducer";
 import {cardsReducer} from "../reducers/cardsReducer";
+import {allocationReducer} from "../reducers/allocationReducer";
 
 // Combine Reducers
 const rootReducers = combineReducers({
   portfolio: portfolioReducer,
   table: tableReducer,
-  cards: cardsReducer
+  cards: cardsReducer,
+  allocation: allocationReducer
 });
 
 export const store = createStore( rootReducers, composeWithDevTools(applyMiddleware(thunk)) );

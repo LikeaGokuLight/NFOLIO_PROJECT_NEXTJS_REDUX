@@ -1,11 +1,15 @@
 import axios from "axios";
+import {getHourNow, updateDate} from "./updateData";
 
 ////////////////////////////////////////////////// FETCH PORTFOLIO DATA -- done
 export const fetchPortfolioData = async () => {
+
+  const checkDataStorageTime = JSON.parse(window.localStorage.getItem("time_set_data"));
+  console.log(checkDataStorageTime, 'checkDataStorageTime')
   try {
     // IF WE HAVE DATA IN LOCAL STORAGE, DO IF STATEMENT
     const checkDataStorage = Boolean(window.localStorage.getItem('portfolio_data'));
-    if ( checkDataStorage ) {
+    if ( checkDataStorage && updateDate(checkDataStorageTime) ) {
       return JSON.parse(localStorage.getItem("portfolio_data"));
     }
 
@@ -17,6 +21,7 @@ export const fetchPortfolioData = async () => {
     const {data} = await res;
 
     localStorage.setItem("portfolio_data", JSON.stringify(data));
+    localStorage.setItem("time_set_data", JSON.stringify(getHourNow()));
 
     return data;
   } catch (err) {
@@ -37,6 +42,12 @@ const fetchAdditionalData = async (token_address, token_id) => {
 
 ////////////////////////////////////////////////// FETCH OWNED DATA -- done
 export const fetchOwnedData = async () => {
+  const checkDataStorageTime = JSON.parse(window.localStorage.getItem("time_set_data"));
+  // IF WE HAVE DATA IN LOCAL STORAGE, DO IF STATEMENT
+  const checkDataStorage = Boolean(window.localStorage.getItem('portfolio_owned_data'));
+  if ( checkDataStorage && updateDate(checkDataStorageTime) ) {
+    return JSON.parse(localStorage.getItem("portfolio_owned_data"));
+  }
 
   try {
     const res = await axios.get(`https://api.nfolio.io/account/owned_nfts/0x17f8dc174935fd109fa45e00843e106b4c3f8385/?page=1&size=100`, {
@@ -45,11 +56,11 @@ export const fetchOwnedData = async () => {
       }
     });
     const {data} = await res;
-
+    console.log(data)
     if ( data.total > data.size ) {
       console.log('FETCH THE REST OF DATA OWNED');
     }
-
+    localStorage.setItem("portfolio_owned_data", JSON.stringify(data));
     return data;
   } catch (err) {
     console.log('ERROR: ', err);
@@ -62,9 +73,10 @@ function createTokenIdAddress(tokenAddress, tokenID) {
 
 ////////////////////////////////////////////////// FETCH TOTAL FLOOR PRICE -- done
 export const fetchFloorPrice = async () => {
+  const checkDataStorageTime = JSON.parse(window.localStorage.getItem("time_set_data"));
   // IF WE HAVE DATA IN LOCAL STORAGE, DO IF STATEMENT
   const checkDataStorage = Boolean(window.localStorage.getItem('total_floor_price'));
-  if ( checkDataStorage ) {
+  if ( checkDataStorage && updateDate(checkDataStorageTime) ) {
     return JSON.parse(localStorage.getItem("total_floor_price"));
   }
 
@@ -85,7 +97,7 @@ export const fetchFloorPrice = async () => {
     // floor.collection.stats.floor_price
     // floor.collection.stats.num_reports
     // floor.collection.stats.one_day_average_price
-    totalFloorPriceArray.push(floor.collection.stats.one_day_average_price);
+    totalFloorPriceArray.push(floor?.collection.stats?.one_day_average_price);
   }))
 
   const allTotalFloorPriceData = totalFloorPriceArray.reduce((pv, cv) => pv + cv, 0);
@@ -96,10 +108,10 @@ export const fetchFloorPrice = async () => {
 
 ////////////////////////////////////////////////// FETCH SOLD DATA -- done
 export const fetchSoldData = async () => {
-
+  const checkDataStorageTime = JSON.parse(window.localStorage.getItem("time_set_data"));
   // IF WE HAVE DATA IN LOCAL STORAGE, DO IF STATEMENT
   const checkDataStorage = Boolean(window.localStorage.getItem('sold_data'));
-  if ( checkDataStorage ) {
+  if ( checkDataStorage && updateDate(checkDataStorageTime) ) {
     return JSON.parse(localStorage.getItem("sold_data"));
   }
 
@@ -150,9 +162,10 @@ const createCardsData = (id, name, img, bought, floor, estimate) => {
 
 ////////////////////////////////////////////////// FETCH DATA CARDS PAGE
 export const fetchCardsDataPage = async (page = 1, size = 100) => {
+  const checkDataStorageTime = JSON.parse(window.localStorage.getItem("time_set_data"));
   // IF WE HAVE DATA IN LOCAL STORAGE, DO THIS IF STATEMENT
   const checkDataStorage = Boolean(window.localStorage.getItem('cards_data'));
-  if ( checkDataStorage ) {
+  if ( checkDataStorage && updateDate(checkDataStorageTime) ) {
     return JSON.parse(localStorage.getItem("cards_data"));
   }
 
@@ -180,5 +193,51 @@ export const fetchCardsDataPage = async (page = 1, size = 100) => {
 
   localStorage.setItem("cards_data", JSON.stringify(cards_data_page));
   return cards_data_page;
+};
+
+
+////////////////////////////////////////////////// FETCH ALLOCATION DATA
+const createAllocationData = (collection, floor) => {
+  return { collection, floor };
+}
+
+export const fetchAllocationData = async () => {
+  const checkDataStorageTime = JSON.parse(window.localStorage.getItem("time_set_data"));
+// IF WE HAVE DATA IN LOCAL STORAGE, DO THIS IF STATEMENT
+  const checkDataStorage = Boolean(window.localStorage.getItem('allocation_data'));
+  if ( checkDataStorage && updateDate(checkDataStorageTime) ) {
+
+    return {
+      allocation_data: JSON.parse(localStorage.getItem("allocation_data")),
+      total_floor_price: JSON.parse(localStorage.getItem("total_floor_price"))
+    }
+  }
+
+  const total_floor_price = await fetchFloorPrice();
+  const allocation_data = [];
+
+  const data = await fetchOwnedData();
+
+  await Promise.all(
+    data.items.map(async (d) => {
+      const data = await fetchAdditionalData(d.token_address, d.token_id);
+
+      // const id = d?.token_address + d?.token_id;
+      const collection = data?.collection?.primary_asset_contracts[0]?.name;
+      const floor = data?.collection?.stats?.one_day_average_price;
+
+      allocation_data.push(createAllocationData(
+        collection ? collection : 'none',
+        floor !== null ? floor : 0,
+      ))
+    })
+  )
+
+  localStorage.setItem("allocation_data", JSON.stringify(allocation_data));
+
+  return {
+    allocation_data: allocation_data,
+    total_floor_price: total_floor_price
+  };
 }
 

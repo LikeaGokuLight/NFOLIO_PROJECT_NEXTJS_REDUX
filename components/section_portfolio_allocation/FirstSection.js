@@ -22,12 +22,12 @@ const FirstSection = () => {
     <StyledWrapper>
       <Container>
         <Grid container spacing={2}>
-          <Grid item lg={8} xs={12} pt={5}>
+          <Grid item lg={7} md={7} xs={12} pt={5}>
             <Paper
               sx={{
                 display: 'flex',
                 flexDirection: 'column',
-                maxHeight: 300,
+                minHeight: 300,
                 borderRadius: '1rem',
                 overflow: 'hidden',
                 backgroundColor: Theme.palette.secondary.light
@@ -36,7 +36,7 @@ const FirstSection = () => {
               <Portfolio/>
             </Paper>
           </Grid>
-          <Grid item lg={4} xs={12}>
+          <Grid item lg={5} md={5} xs={12}>
             <Paper
               sx={{
                 display: 'flex',

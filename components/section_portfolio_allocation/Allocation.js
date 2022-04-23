@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Container} from "@mui/material";
 import {Divider, LinearProgress, Typography} from "@mui/material";
 import AllInboxIcon from '@mui/icons-material/AllInbox';
@@ -6,15 +6,9 @@ import Box from "@mui/material/Box";
 import {createTheme} from "@mui/material/styles";
 import Theme from "../../helper/Theme";
 import {ThemeProvider} from "@emotion/react";
-
-const myTestArray = [
-  {title: 'The Dodge Pound', percentage: 8},
-  {title: 'Ruggenesis Nft', percentage: 16},
-  {title: 'Habbo Avatars', percentage: 13},
-  {title: 'Nifty Portal', percentage: 32},
-  {title: 'CAmeo PAss', percentage: 7},
-  {title: 'Nifty Portal', percentage: 28},
-];
+import {useDispatch, useSelector} from "react-redux";
+import {loadAllocationData} from "../../redux/actions/allocationAction";
+import {LoadingCollection} from "../my_loading/MyLoading";
 
 const LinearProgressWithLabel = (props) => {
   return (
@@ -26,7 +20,8 @@ const LinearProgressWithLabel = (props) => {
         <Typography variant="body2" color="white">
           {`${Math.round(
             props.value,
-          )}%`}</Typography>
+          )}%`}
+        </Typography>
       </Box>
     </Box>
   );
@@ -38,24 +33,41 @@ theme.typography.p = {
   fontSize: '1rem',
   fontWeight: 'lighter',
 
-  '@media (min-width:300px)': {
-    fontSize: '.6rem',
-    fontWeight: 'lighter'
-  },
-  '@media (min-width:400px)': {
+  '@media (max-width:300px)': {
     fontSize: '.8rem',
-    fontWeight: 'lighter'
+    fontWeight: 'lighter',
+    width: '50px !important',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+  },
+  '@media (max-width:400px)': {
+    fontSize: '1.1rem',
+    fontWeight: 'lighter',
   },
 
   [theme.breakpoints.up('md')]: {
     fontSize: '1.1rem',
     fontWeight: 'lighter',
+    width: '170px',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   },
 };
 
 const Allocation = () => {
 
-  const arraySorted = myTestArray.sort((a, b) => (a.percentage < b.percentage ? 1 : -1));
+  const { data, is_loading_allocation } = useSelector((state) => state.allocation)
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(loadAllocationData());
+  }, []);
+
+
+  const arraySorted = data?.sort((a, b) => (a.total < b.total ? 1 : -1)).slice(0,6);
 
   return (
     <ThemeProvider theme={theme}>
@@ -67,25 +79,58 @@ const Allocation = () => {
         <Divider sx={{width: '100%', mx: 'auto', my: 1, backgroundColor: '#DFDFDE'}}/>
         <div>
           {
-            arraySorted.map((data, i) => (
-              <div key={i} style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                margin: '.9rem 0 .5rem 0',
-              }}>
+            is_loading_allocation
+              ? (
+                <>
+                  <Box sx={{width: '100%', alignSelf:'center'}}>
+                    <LoadingCollection />
+                    <LoadingCollection />
+                  </Box>
 
-                <Box sx={{width: '50%', alignSelf:'center'}}>
-                  <Typography variant="p" gutterBottom component="span" color={'white'}>
-                    {data.title}
-                  </Typography>
-                </Box>
+                  <Box sx={{width: '100%', alignSelf:'center'}}>
+                    <LoadingCollection />
+                    <LoadingCollection />
+                  </Box>
+                </>
 
-                <Box sx={{width: '50%', alignSelf:'center'}}>
-                  <LinearProgressWithLabel value={data.percentage}/>
-                </Box>
+              )
+              : (
+                arraySorted.map((data, i) => (
+                  <div key={i} style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    margin: '.9rem 0 .5rem 0',
+                  }}>
 
-              </div>
-            ))
+                    <Box sx={{width: '50%', alignSelf:'center'}}>
+                      <Typography
+                        variant="p"
+                        gutterBottom
+                        noWrap
+                        component="span"
+                        color={'white'}
+                      >
+                        <div style={{
+                          width: '170px',
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis'
+                        }}>
+                          {data.collection}
+                        </div>
+
+                      </Typography>
+                    </Box>
+
+                    <Box sx={{width: '50%', alignSelf:'center'}}>
+                      <LinearProgressWithLabel value={data.total}/>
+                    </Box>
+
+                  </div>
+                ))
+              )
+
+
           }
         </div>
 

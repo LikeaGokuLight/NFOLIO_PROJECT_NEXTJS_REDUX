@@ -182,7 +182,7 @@ const PortfolioData = (props) => {
                         )
                         : (
                           <Typography variant="h3" component="div" fontWeight={500}>
-                            { Math.round(portfolio?.total_floor_price * 10000) / 10000  }
+                            { Math.round( ( (portfolio.portfolio_data.eth_received +  portfolio.total_floor_price - portfolio.portfolio_data.eth_spent) * 10000 )) / 10000  }
                           </Typography>
                         )
                     }

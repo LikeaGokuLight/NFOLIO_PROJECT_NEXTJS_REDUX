@@ -3,6 +3,12 @@ const SET_TOTAL_PAGES = "SET_TOTAL_PAGES";
 const SET_PAGE = "SET_PAGE";
 const LOADING_DETAIL = "LOADING_DETAIL";
 const ERROR_MESSAGE_CARDS = "ERROR_MESSAGE";
+const SORT_CARDS_NAME_AZ = "SORT_CARDS_NAME_AZ";
+const SORT_CARDS_NAME_ZA = "SORT_CARDS_NAME_ZA";
+const SORT_CARDS_BOUGHT_HIGH = "SORT_CARDS_BOUGHT_HIGH";
+const SORT_CARDS_BOUGHT_LOW = "SORT_CARDS_BOUGHT_LOW";
+const SORT_CARDS_FLOOR_HIGH = "SORT_CARDS_FLOOR_HIGH";
+const SORT_CARDS_FLOOR_LOW = "SORT_CARDS_FLOOR_LOW";
 
 const INITIAL_STATE = {
   is_loading_cards: true,
@@ -45,6 +51,48 @@ export const cardsReducer = (state = INITIAL_STATE, actions) => {
         ...state,
         is_loading_cards: false,
         error_message: payload
+      };
+    case SORT_CARDS_NAME_AZ:
+      return {
+        ...state,
+        cards_data: payload,
+        is_loading_cards: false,
+        error_message: null,
+      };
+    case SORT_CARDS_NAME_ZA:
+      return {
+        ...state,
+        cards_data: payload,
+        is_loading_cards: false,
+        error_message: null,
+      };
+    case SORT_CARDS_BOUGHT_HIGH:
+      return {
+        ...state,
+        cards_data: payload,
+        is_loading_cards: false,
+        error_message: null,
+      };
+    case SORT_CARDS_BOUGHT_LOW:
+      return {
+        ...state,
+        cards_data: payload,
+        is_loading_cards: false,
+        error_message: null,
+      };
+    case SORT_CARDS_FLOOR_HIGH:
+      return {
+        ...state,
+        cards_data: payload,
+        is_loading_cards: false,
+        error_message: null,
+      };
+    case SORT_CARDS_FLOOR_LOW:
+      return {
+        ...state,
+        cards_data: payload,
+        is_loading_cards: false,
+        error_message: null,
       };
     default:
       return { ...state };
