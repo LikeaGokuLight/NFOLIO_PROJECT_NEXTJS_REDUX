@@ -1,19 +1,24 @@
-import { getHours } from "date-fns"
+import {getDate, getHours} from "date-fns"
 
-export const getHourNow = () => {
+export const getHourAndDayNow = () => {
   const date = new Date();
-  return getHours(date);
+  const hourNow = getHours(date)
+  const dayNow = getDate(date)
+  return { hourNow, dayNow };
 }
 
-export const updateDate = (hour) => {
+export const updateDate = (h, d) => {
+  const { hourNow, dayNow  } = getHourAndDayNow();
 
-  console.log(hour, 'hour')
+  if ( dayNow !== d ) return false;
 
-  if ( typeof(hour) !== 'number' ) return false;
+  console.log(h, d, 'hour, day')
+  console.log(hourNow, dayNow, 'getHourAndDayNow')
+
+  if ( typeof(h) !== 'number' && typeof(d) !== 'number' ) return false;
 
   const date = new Date();
-  const hours = getHours(date)
-  const checkTime = Math.abs( hour - hours )
+  const checkTime = Math.abs( h - hourNow )
 
   return 6 > checkTime;
 

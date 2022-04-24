@@ -1,15 +1,14 @@
 import axios from "axios";
-import {getHourNow, updateDate} from "./updateData";
+import {getHourAndDayNow, updateDate} from "./updateData";
 
 ////////////////////////////////////////////////// FETCH PORTFOLIO DATA -- done
 export const fetchPortfolioData = async () => {
 
-  const checkDataStorageTime = JSON.parse(window.localStorage.getItem("time_set_data"));
-  console.log(checkDataStorageTime, 'checkDataStorageTime')
+  const { hourNow, dayNow } = JSON.parse(window.localStorage.getItem("time_set_data"));
   try {
     // IF WE HAVE DATA IN LOCAL STORAGE, DO IF STATEMENT
     const checkDataStorage = Boolean(window.localStorage.getItem('portfolio_data'));
-    if ( checkDataStorage && updateDate(checkDataStorageTime) ) {
+    if ( checkDataStorage && updateDate(hourNow, dayNow) ) {
       return JSON.parse(localStorage.getItem("portfolio_data"));
     }
 
@@ -21,7 +20,7 @@ export const fetchPortfolioData = async () => {
     const {data} = await res;
 
     localStorage.setItem("portfolio_data", JSON.stringify(data));
-    localStorage.setItem("time_set_data", JSON.stringify(getHourNow()));
+    localStorage.setItem("time_set_data", JSON.stringify(getHourAndDayNow()));
 
     return data;
   } catch (err) {
@@ -42,10 +41,10 @@ const fetchAdditionalData = async (token_address, token_id) => {
 
 ////////////////////////////////////////////////// FETCH OWNED DATA -- done
 export const fetchOwnedData = async () => {
-  const checkDataStorageTime = JSON.parse(window.localStorage.getItem("time_set_data"));
+  const { hourNow, dayNow } = JSON.parse(window.localStorage.getItem("time_set_data"));
   // IF WE HAVE DATA IN LOCAL STORAGE, DO IF STATEMENT
   const checkDataStorage = Boolean(window.localStorage.getItem('portfolio_owned_data'));
-  if ( checkDataStorage && updateDate(checkDataStorageTime) ) {
+  if ( checkDataStorage && updateDate(hourNow, dayNow) ) {
     return JSON.parse(localStorage.getItem("portfolio_owned_data"));
   }
 
@@ -60,7 +59,10 @@ export const fetchOwnedData = async () => {
     if ( data.total > data.size ) {
       console.log('FETCH THE REST OF DATA OWNED');
     }
+
+    localStorage.setItem("time_set_data", JSON.stringify(getHourAndDayNow()));
     localStorage.setItem("portfolio_owned_data", JSON.stringify(data));
+
     return data;
   } catch (err) {
     console.log('ERROR: ', err);
@@ -73,10 +75,10 @@ function createTokenIdAddress(tokenAddress, tokenID) {
 
 ////////////////////////////////////////////////// FETCH TOTAL FLOOR PRICE -- done
 export const fetchFloorPrice = async () => {
-  const checkDataStorageTime = JSON.parse(window.localStorage.getItem("time_set_data"));
+  const { hourNow, dayNow } = JSON.parse(window.localStorage.getItem("time_set_data"));
   // IF WE HAVE DATA IN LOCAL STORAGE, DO IF STATEMENT
   const checkDataStorage = Boolean(window.localStorage.getItem('total_floor_price'));
-  if ( checkDataStorage && updateDate(checkDataStorageTime) ) {
+  if ( checkDataStorage && updateDate( hourNow, dayNow) ) {
     return JSON.parse(localStorage.getItem("total_floor_price"));
   }
 
@@ -102,16 +104,17 @@ export const fetchFloorPrice = async () => {
 
   const allTotalFloorPriceData = totalFloorPriceArray.reduce((pv, cv) => pv + cv, 0);
 
+  localStorage.setItem("time_set_data", JSON.stringify(getHourAndDayNow()));
   localStorage.setItem("total_floor_price", JSON.stringify(allTotalFloorPriceData));
   return allTotalFloorPriceData;
 };
 
 ////////////////////////////////////////////////// FETCH SOLD DATA -- done
 export const fetchSoldData = async () => {
-  const checkDataStorageTime = JSON.parse(window.localStorage.getItem("time_set_data"));
+  const { hourNow, dayNow } = JSON.parse(window.localStorage.getItem("time_set_data"));
   // IF WE HAVE DATA IN LOCAL STORAGE, DO IF STATEMENT
   const checkDataStorage = Boolean(window.localStorage.getItem('sold_data'));
-  if ( checkDataStorage && updateDate(checkDataStorageTime) ) {
+  if ( checkDataStorage && updateDate(hourNow, dayNow) ) {
     return JSON.parse(localStorage.getItem("sold_data"));
   }
 
@@ -127,6 +130,7 @@ export const fetchSoldData = async () => {
       console.log('FETCH THE REST OF DATA SOLD');
     }
 
+    localStorage.setItem("time_set_data", JSON.stringify(getHourAndDayNow()));
     localStorage.setItem("sold_data", JSON.stringify(data));
 
     return data;
@@ -162,10 +166,10 @@ const createCardsData = (id, name, img, bought, floor, estimate) => {
 
 ////////////////////////////////////////////////// FETCH DATA CARDS PAGE
 export const fetchCardsDataPage = async (page = 1, size = 100) => {
-  const checkDataStorageTime = JSON.parse(window.localStorage.getItem("time_set_data"));
+  const { hourNow, dayNow } = JSON.parse(window.localStorage.getItem("time_set_data"));
   // IF WE HAVE DATA IN LOCAL STORAGE, DO THIS IF STATEMENT
   const checkDataStorage = Boolean(window.localStorage.getItem('cards_data'));
-  if ( checkDataStorage && updateDate(checkDataStorageTime) ) {
+  if ( checkDataStorage && updateDate(hourNow, dayNow) ) {
     return JSON.parse(localStorage.getItem("cards_data"));
   }
 
@@ -191,6 +195,7 @@ export const fetchCardsDataPage = async (page = 1, size = 100) => {
     })
   )
 
+  localStorage.setItem("time_set_data", JSON.stringify(getHourAndDayNow()));
   localStorage.setItem("cards_data", JSON.stringify(cards_data_page));
   return cards_data_page;
 };
@@ -202,10 +207,10 @@ const createAllocationData = (collection, floor) => {
 }
 
 export const fetchAllocationData = async () => {
-  const checkDataStorageTime = JSON.parse(window.localStorage.getItem("time_set_data"));
+  const { hourNow, dayNow } = JSON.parse(window.localStorage.getItem("time_set_data"));
 // IF WE HAVE DATA IN LOCAL STORAGE, DO THIS IF STATEMENT
   const checkDataStorage = Boolean(window.localStorage.getItem('allocation_data'));
-  if ( checkDataStorage && updateDate(checkDataStorageTime) ) {
+  if ( checkDataStorage && updateDate(hourNow, dayNow) ) {
 
     return {
       allocation_data: JSON.parse(localStorage.getItem("allocation_data")),
@@ -233,6 +238,7 @@ export const fetchAllocationData = async () => {
     })
   )
 
+  localStorage.setItem("time_set_data", JSON.stringify(getHourAndDayNow()));
   localStorage.setItem("allocation_data", JSON.stringify(allocation_data));
 
   return {
