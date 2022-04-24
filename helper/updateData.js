@@ -2,24 +2,23 @@ import {getDate, getHours} from "date-fns"
 
 export const getHourAndDayNow = () => {
   const date = new Date();
-  const hourNow = getHours(date)
-  const dayNow = getDate(date)
-  return { hourNow, dayNow };
+  const hNow = getHours(date)
+  const dNow = getDate(date)
+  return { hNow, dNow };
 }
 
-export const updateDate = (h, d) => {
-  const { hourNow, dayNow  } = getHourAndDayNow();
+export const updateDate = () => {
+  const time = JSON.parse(window.localStorage.getItem("time_set_data"));
 
-  if ( dayNow !== d ) return false;
+  if (time === null) return false;
 
-  console.log(h, d, 'hour, day')
-  console.log(hourNow, dayNow, 'getHourAndDayNow')
+  const { hNow, dNow } = getHourAndDayNow();
 
-  if ( typeof(h) !== 'number' && typeof(d) !== 'number' ) return false;
+  if ( dNow !== time.dNow ) return false;
 
-  const date = new Date();
-  const checkTime = Math.abs( h - hourNow )
+  const calcTime =  Math.abs(time.hNow - hNow);
 
-  return 6 > checkTime;
+  return 6 > calcTime;
+
 
 }

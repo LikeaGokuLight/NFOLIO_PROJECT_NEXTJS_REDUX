@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import FirstNav from "../components/navbar/InitialNav";
 import SecondaryNav from "../components/navbar/SecondaryNav";
 import FirstSection from "../components/section_portfolio_allocation/FirstSection";
@@ -6,6 +6,7 @@ import TableSection from "../components/section_table/TableSection";
 import CardsSection from "../components/section_cards/CardsSection";
 import {ThemeProvider} from "@mui/system";
 import Theme from "../helper/Theme";
+import {updateDate} from "../helper/updateData";
 
 const Index = () => {
 

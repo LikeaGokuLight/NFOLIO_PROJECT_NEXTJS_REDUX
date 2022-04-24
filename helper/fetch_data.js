@@ -3,12 +3,11 @@ import {getHourAndDayNow, updateDate} from "./updateData";
 
 ////////////////////////////////////////////////// FETCH PORTFOLIO DATA -- done
 export const fetchPortfolioData = async () => {
-
-  const { hourNow, dayNow } = JSON.parse(window.localStorage.getItem("time_set_data"));
   try {
+    const checkTimeToUpdate = updateDate();
     // IF WE HAVE DATA IN LOCAL STORAGE, DO IF STATEMENT
     const checkDataStorage = Boolean(window.localStorage.getItem('portfolio_data'));
-    if ( checkDataStorage && updateDate(hourNow, dayNow) ) {
+    if ( checkDataStorage && checkTimeToUpdate ) {
       return JSON.parse(localStorage.getItem("portfolio_data"));
     }
 
@@ -41,10 +40,9 @@ const fetchAdditionalData = async (token_address, token_id) => {
 
 ////////////////////////////////////////////////// FETCH OWNED DATA -- done
 export const fetchOwnedData = async () => {
-  const { hourNow, dayNow } = JSON.parse(window.localStorage.getItem("time_set_data"));
   // IF WE HAVE DATA IN LOCAL STORAGE, DO IF STATEMENT
   const checkDataStorage = Boolean(window.localStorage.getItem('portfolio_owned_data'));
-  if ( checkDataStorage && updateDate(hourNow, dayNow) ) {
+  if ( checkDataStorage && updateDate() ) {
     return JSON.parse(localStorage.getItem("portfolio_owned_data"));
   }
 
@@ -75,10 +73,9 @@ function createTokenIdAddress(tokenAddress, tokenID) {
 
 ////////////////////////////////////////////////// FETCH TOTAL FLOOR PRICE -- done
 export const fetchFloorPrice = async () => {
-  const { hourNow, dayNow } = JSON.parse(window.localStorage.getItem("time_set_data"));
   // IF WE HAVE DATA IN LOCAL STORAGE, DO IF STATEMENT
   const checkDataStorage = Boolean(window.localStorage.getItem('total_floor_price'));
-  if ( checkDataStorage && updateDate( hourNow, dayNow) ) {
+  if ( checkDataStorage && updateDate() ) {
     return JSON.parse(localStorage.getItem("total_floor_price"));
   }
 
@@ -111,10 +108,9 @@ export const fetchFloorPrice = async () => {
 
 ////////////////////////////////////////////////// FETCH SOLD DATA -- done
 export const fetchSoldData = async () => {
-  const { hourNow, dayNow } = JSON.parse(window.localStorage.getItem("time_set_data"));
   // IF WE HAVE DATA IN LOCAL STORAGE, DO IF STATEMENT
   const checkDataStorage = Boolean(window.localStorage.getItem('sold_data'));
-  if ( checkDataStorage && updateDate(hourNow, dayNow) ) {
+  if ( checkDataStorage && updateDate() ) {
     return JSON.parse(localStorage.getItem("sold_data"));
   }
 
@@ -166,10 +162,9 @@ const createCardsData = (id, name, img, bought, floor, estimate) => {
 
 ////////////////////////////////////////////////// FETCH DATA CARDS PAGE
 export const fetchCardsDataPage = async (page = 1, size = 100) => {
-  const { hourNow, dayNow } = JSON.parse(window.localStorage.getItem("time_set_data"));
   // IF WE HAVE DATA IN LOCAL STORAGE, DO THIS IF STATEMENT
   const checkDataStorage = Boolean(window.localStorage.getItem('cards_data'));
-  if ( checkDataStorage && updateDate(hourNow, dayNow) ) {
+  if ( checkDataStorage && updateDate() ) {
     return JSON.parse(localStorage.getItem("cards_data"));
   }
 
@@ -181,8 +176,6 @@ export const fetchCardsDataPage = async (page = 1, size = 100) => {
       const data = await fetchAdditionalData(d.token_address, d.token_id);
 
       const floor = data?.collection?.stats?.one_day_average_price
-
-      console.log(typeof(data.image_url))
 
       cards_data_page.push(createCardsData(
         d.token_address ? d.token_address + d.token_id : 'none',
@@ -207,10 +200,9 @@ const createAllocationData = (collection, floor) => {
 }
 
 export const fetchAllocationData = async () => {
-  const { hourNow, dayNow } = JSON.parse(window.localStorage.getItem("time_set_data"));
 // IF WE HAVE DATA IN LOCAL STORAGE, DO THIS IF STATEMENT
   const checkDataStorage = Boolean(window.localStorage.getItem('allocation_data'));
-  if ( checkDataStorage && updateDate(hourNow, dayNow) ) {
+  if ( checkDataStorage && updateDate() ) {
 
     return {
       allocation_data: JSON.parse(localStorage.getItem("allocation_data")),
